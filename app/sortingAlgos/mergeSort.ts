@@ -1,43 +1,60 @@
 const heightCalc = (num: number, min: number, max: number) =>
     10 + ((num - min) * ((3 * window.innerHeight) / 4 - 10)) / (max - min);
 
-let timeoutID = null, timeoutID2 = null;
+let timeoutID: Array<NodeJS.Timeout> | null = null, timeoutID2: Array<NodeJS.Timeout> | null = null;
 
-export const mergeSorter = (arr: Array<number>) => {
-  const animations = mergeSort(arr);
+export const mergeSorter = (arr: Array<number>, setNumOfBars: any, numOfBars: number) => {
+  console.log("here");
+
   const SECONDARY_COLOR = "red",
     PRIMARY_COLOR = "turquoise";
-  const ANIMATION_SPEED = 100;
+  const ANIMATION_SPEED = 10;
+
+  if(timeoutID) {
+    timeoutID.forEach(element => {
+      clearTimeout(element);
+    });
+    timeoutID = null;
+
+    if(timeoutID2) {
+      timeoutID2.forEach(element => {
+        clearTimeout(element);
+      });
+      timeoutID2 = null;
+    }
+    const temp = numOfBars;
+    setNumOfBars(() => 0);
+    setNumOfBars(() => temp);
+  }
+
+  const animations = mergeSort(arr);
 
   const bars = document.getElementsByClassName("bars");
+  timeoutID = new Array<NodeJS.Timeout>(arr.length);
+  timeoutID2 = new Array<NodeJS.Timeout>(bars.length);
+
 
   for (let i = 0; i < animations.length; i++) {
     // Every 3rd animation is the comparison
     if (i % 3 !== 2) {
       const [barOne, barTwo] = animations[i];
       const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
-      timeoutID = setTimeout(() => {
+      timeoutID[i] = setTimeout(() => {
         bars[barOne].style.backgroundColor = color;
         bars[barTwo].style.backgroundColor = color;
       }, i * ANIMATION_SPEED);
     } else {
-      timeoutID = setTimeout(() => {
+      timeoutID[i] = setTimeout(() => {
         const [barOne, newHeight] = animations[i];
         bars[barOne].style.height = `${heightCalc(newHeight, 10, 100)}px`;
       }, i * ANIMATION_SPEED);
-      // setTimeout(() => {
-      //   timeoutID = null
-      // }, animations.length*ANIMATION_SPEED);
     }
   }
 
   for(let i = 0; i < bars.length; i++) {
-    timeoutID2 = setTimeout(() => {
+    timeoutID2[i] = setTimeout(() => {
       bars[i].style.backgroundColor = "green";
     }, animations.length*ANIMATION_SPEED + i*ANIMATION_SPEED)
-    // setTimeout(() => {
-    //   timeoutID2 = null;
-    // }, animations.length*ANIMATION_SPEED + bars.length*ANIMATION_SPEED);
   };
 };
 

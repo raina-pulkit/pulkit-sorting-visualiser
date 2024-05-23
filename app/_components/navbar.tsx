@@ -5,7 +5,7 @@ import { useState } from "react";
 import { AiFillMerge } from "react-icons/ai";
 import { sorts } from "./data";
 
-const NavBar = ({ arr, setArr }: { arr: Array<number>; setArr: any }) => {
+const NavBar = ({ arr, setNumOfBars, numOfBars }: { arr: Array<number>; setNumOfBars: any; numOfBars: number }) => {
   const [visible, setVisible] = useState(true);  
 
   return (
@@ -24,7 +24,7 @@ const NavBar = ({ arr, setArr }: { arr: Array<number>; setArr: any }) => {
             <div className="ml-4 flex items-center space-x-4">
               {sorts.map((obj, ind) => (
                 <button
-                  onClick={() => obj["function"](arr)}
+                  onClick={() => obj["function"](arr, setNumOfBars, numOfBars)}
                   className="text-white hover:bg-white hover:text-black rounded-lg p-2"
                   key={ind}
                 >
@@ -48,7 +48,7 @@ const NavBar = ({ arr, setArr }: { arr: Array<number>; setArr: any }) => {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
             {sorts.map((obj, ind) => (
               <button
-                onClick={() => obj["function"](arr)}
+                onClick={() => obj["function"](arr, setNumOfBars)}
                 className="text-white hover:bg-white hover:text-black rounded-lg p-2"
                 key={ind}
               >

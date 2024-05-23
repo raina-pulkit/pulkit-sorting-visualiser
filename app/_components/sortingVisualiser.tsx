@@ -1,27 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { getTimeoutId1, getTImeoutId2 } from "../sortingAlgos/mergeSort";
+import ChangeBars from "./changeNumberOfBars";
 
-const FormSchema = z.object({
-  name: z.string().min(1, {
-    message: "There must be some value!",
-  }),
-});
 
 const SortingVisualiser = ({
   arr,
   setArr,
+  numOfBars,
+  setNumOfBars
 }: {
   arr: Array<number>;
   setArr: any;
+  numOfBars: number;
+  setNumOfBars: any;
 }) => {
+
   const randGenerator = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
@@ -37,29 +31,11 @@ const SortingVisualiser = ({
   };
 
   useEffect(() => {
-    resetArray(5);
-  }, []);
+    resetArray(numOfBars);
+  }, [numOfBars]);
 
   const heightCalc = (num: number, min: number, max: number) =>
     10 + ((num - min) * ((3 * window.innerHeight) / 4 - 10)) / (max - min);
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      name: "",
-    },
-  });
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    // Stop any existing timeouts
-    clearTimeout(getTimeoutId1);
-    clearTimeout(getTImeoutId2);
-    // Reset the entire array
-    const num = parseInt(data.name, 10);
-    if (Number.isNaN(num)) return;
-
-    resetArray(num);
-  }
 
   return (
     <div className="flex flex-col gap-3 justify-end p-2">
@@ -86,31 +62,7 @@ const SortingVisualiser = ({
         })}
       </div>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 flex justify-center items-center gap-5 w-full"
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    placeholder="Enter number of array items!"
-                    {...field}
-                    className="border-2 border-black outline-none shadow-md"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="!m-0 w-1/6 min-w-min">
-            Generate New Array
-          </Button>
-        </form>
-      </Form>
+      <ChangeBars setNumOfBars={setNumOfBars}/>
     </div>
   );
 };
