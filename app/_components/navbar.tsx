@@ -1,48 +1,36 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
+import { AiFillMerge } from "react-icons/ai";
+import { sorts } from "./data";
 
-const NavBar = () => {
-  const [visible, setVisible] = useState(true);
+const NavBar = ({ arr, setArr }: { arr: Array<number>; setArr: any }) => {
+  const [visible, setVisible] = useState(true);  
 
   return (
-    <nav className="bg-black">
+    <nav className="bg-black text-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="text-white">
+            <div className="flex-shrink-0 flex gap-2 justify-center items-center">
+              <AiFillMerge color="white" className="h-10 w-10" />
+              <div className="text-white text-2xl">
                 Sorting Algorithm Visualiser
               </div>
             </div>
           </div>
           <div className="hidden md:block">
             <div className="ml-4 flex items-center space-x-4">
-              <a
-                href="/"
-                className="text-white hover:bg-white hover:text-black rounded-lg p-2"
-              >
-                Merge Sort
-              </a>
-              <a
-                href="/"
-                className="text-white hover:bg-white hover:text-black rounded-lg p-2"
-              >
-                Bogo Sort
-              </a>
-              <a
-                href="/"
-                className="text-white hover:bg-white hover:text-black rounded-lg p-2"
-              >
-                Quick Sort
-              </a>
-              <a
-                href="/"
-                className="text-white hover:bg-white hover:text-black rounded-lg p-2"
-              >
-                Bubble Sort
-              </a>
+              {sorts.map((obj, ind) => (
+                <button
+                  onClick={() => obj["function"](arr)}
+                  className="text-white hover:bg-white hover:text-black rounded-lg p-2"
+                  key={ind}
+                >
+                  {obj["name"]}
+                </button>
+              ))}
             </div>
           </div>
           <div className="md:hidden flex items-center">
@@ -55,36 +43,21 @@ const NavBar = () => {
           </div>
         </div>
       </div>
-      {visible && 
+      {visible && (
         <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-          <a
-                href="/"
-                className="block text-white hover:bg-white hover:text-black rounded-lg p-2"
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 flex flex-col">
+            {sorts.map((obj, ind) => (
+              <button
+                onClick={() => obj["function"](arr)}
+                className="text-white hover:bg-white hover:text-black rounded-lg p-2"
+                key={ind}
               >
-                Link 2
-              </a>
-              <a
-                href="/"
-                className="block text-white hover:bg-white hover:text-black rounded-lg p-2"
-              >
-                Link 3
-              </a>
-              <a
-                href="/"
-                className="block text-white hover:bg-white hover:text-black rounded-lg p-2"
-              >
-                Link 4
-              </a>
-              <a
-                href="/"
-                className="block text-white hover:bg-white hover:text-black rounded-lg p-2"
-              >
-                Link 5
-              </a>
+                {obj["name"]}
+              </button>
+            ))}
           </div>
         </div>
-      }
+      )}
     </nav>
   );
 };

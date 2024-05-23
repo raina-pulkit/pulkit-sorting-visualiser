@@ -1,21 +1,13 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
-import React, { useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import React, { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { getTimeoutId1, getTImeoutId2 } from "../sortingAlgos/mergeSort";
 
 const FormSchema = z.object({
   name: z.string().min(1, {
@@ -23,15 +15,23 @@ const FormSchema = z.object({
   }),
 });
 
-const SortingVisualiser = () => {
-  const [arr, setArr] = useState(new Array(0));
-
+const SortingVisualiser = ({
+  arr,
+  setArr,
+}: {
+  arr: Array<number>;
+  setArr: any;
+}) => {
   const randGenerator = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
   };
 
   const resetArray = (num: number) => {
     var arrNew = new Array(num);
+    const bars = [...document.getElementsByClassName("bars")];
+    bars.forEach(bar => {
+      bar.style.backgroundColor = "black";
+    });
     for (var i = 0; i < num; i++) arrNew[i] = randGenerator(10, 100);
     setArr(arrNew);
   };
@@ -51,15 +51,18 @@ const SortingVisualiser = () => {
   });
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    // Stop any existing timeouts
+    clearTimeout(getTimeoutId1);
+    clearTimeout(getTImeoutId2);
+    // Reset the entire array
     const num = parseInt(data.name, 10);
-    console.log(num);
     if (Number.isNaN(num)) return;
 
     resetArray(num);
   }
 
   return (
-    <div className="flex flex-col flex-1 gap-3 h-full justify-end">
+    <div className="flex flex-col gap-3 justify-end p-2">
       <div className="flex justify-evenly items-end">
         {arr.map((_, ind) => {
           const n = arr.length;
@@ -68,17 +71,17 @@ const SortingVisualiser = () => {
             2,
             Math.min(window.innerWidth / arr.length, 200)
           );
-          console.log("currWidth: ", currWidth);
 
           return (
             <div
               key={ind}
-              className={`bg-black`}
+              className={`bg-black bars text-white text-center`}
               style={{
                 height: `${heightCalc(_, 10, 100)}px`,
                 width: `${currWidth}px`,
               }}
-            ></div>
+            >
+            </div>
           );
         })}
       </div>
@@ -86,7 +89,7 @@ const SortingVisualiser = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 flex justify-center items-center gap-5"
+          className="space-y-6 flex justify-center items-center gap-5 w-full"
         >
           <FormField
             control={form.control}
