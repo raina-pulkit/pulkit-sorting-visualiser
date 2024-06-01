@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Rajdhani } from "next/font/google";
+import { Rajdhani } from "next/font/google";
 import "./globals.css";
+import { ContextProvider } from "./utils/globalProvider";
+import { Toaster } from "@/components/ui/toaster";
 
-const inter = Rajdhani({subsets: ["latin"], weight: ["400"]});
-// const inter = Inter({ subsets: ["latin"] });
+const inter = Rajdhani({ subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
   title: "Sorting Visualiser",
@@ -15,16 +16,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
-      <body
-        className={
-          inter.className
-        }
-      >
-        <div className="w-full h-screen flex flex-col justify-between">{children}</div>
-      </body>
+      <ContextProvider>
+        <body className={inter.className}>
+          <div className="layout min-w-80 w-full min-h-screen flex flex-col justify-between">
+            {children}
+            <Toaster />
+          </div>
+        </body>
+      </ContextProvider>
     </html>
   );
 }

@@ -1,0 +1,4 @@
+.layout {
+    background-image: url('../public/mainbg.jpg');
+    background-attachment: fixed;
+  }

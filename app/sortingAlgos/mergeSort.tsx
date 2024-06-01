@@ -1,69 +1,86 @@
+import React from "react";
+import { useGlobalContext } from "../utils/globalProvider";
+
 const heightCalc = (num: number, min: number, max: number) =>
-    10 + ((num - min) * ((3 * window.innerHeight) / 4 - 10)) / (max - min);
+  10 + ((num - min) * ((3 * window.innerHeight) / 4 - 10)) / (max - min);
 
-let timeoutID: Array<NodeJS.Timeout> | null = null, timeoutID2: Array<NodeJS.Timeout> | null = null;
-
-export const mergeSorter = (arr: Array<number>, setNumOfBars: any, numOfBars: number) => {
-  console.log("here");
+export default function MergeSort() {
+  const {
+    arr,
+    setNum,
+    num,
+    timeoutID1,
+    timeoutID2,
+    setTimeoutID1,
+    setTimeoutID2,
+  } = useGlobalContext();
 
   const SECONDARY_COLOR = "red",
     PRIMARY_COLOR = "turquoise";
   const ANIMATION_SPEED = 10;
+  const useThisArr = [...arr];
 
-  if(timeoutID) {
-    timeoutID.forEach(element => {
+  if (timeoutID1) {
+    timeoutID1.forEach((element) => {
       clearTimeout(element);
     });
-    timeoutID = null;
+    setTimeoutID1(null);
 
-    if(timeoutID2) {
-      timeoutID2.forEach(element => {
+    if (timeoutID2) {
+      timeoutID2.forEach((element) => {
         clearTimeout(element);
       });
-      timeoutID2 = null;
+      setTimeoutID2(null);
     }
-    const temp = numOfBars;
-    setNumOfBars(() => 0);
-    setNumOfBars(() => temp);
+    
+    const temp = num;
+    setNum(() => 0);
+    setNum(() => temp);
   }
 
-  const animations = mergeSort(arr);
+  const animations: number[][] = mergeSort(arr);
 
-  const bars = document.getElementsByClassName("bars");
-  timeoutID = new Array<NodeJS.Timeout>(arr.length);
-  timeoutID2 = new Array<NodeJS.Timeout>(bars.length);
+  const bars = (document.getElementsByClassName("bars") as unknown) as Array<HTMLDivElement>;
+  setTimeoutID1(new Array<NodeJS.Timeout>(arr.length));
+  setTimeoutID2(new Array<NodeJS.Timeout>(bars.length));
 
-
+  let tempArr = new Array<NodeJS.Timeout>(arr.length);
   for (let i = 0; i < animations.length; i++) {
     // Every 3rd animation is the comparison
     if (i % 3 !== 2) {
       const [barOne, barTwo] = animations[i];
+
       const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
-      timeoutID[i] = setTimeout(() => {
+      
+      tempArr[i] = setTimeout(() => {
         bars[barOne].style.backgroundColor = color;
         bars[barTwo].style.backgroundColor = color;
       }, i * ANIMATION_SPEED);
     } else {
-      timeoutID[i] = setTimeout(() => {
+      tempArr[i] = setTimeout(() => {
         const [barOne, newHeight] = animations[i];
         bars[barOne].style.height = `${heightCalc(newHeight, 10, 100)}px`;
       }, i * ANIMATION_SPEED);
     }
   }
 
-  for(let i = 0; i < bars.length; i++) {
-    timeoutID2[i] = setTimeout(() => {
+  setTimeoutID1(tempArr);
+  let temp = new Array<NodeJS.Timeout>(bars.length);
+
+  for (let i = 0; i < bars.length; i++) {
+    tempArr[i] = setTimeout(() => {
       bars[i].style.backgroundColor = "green";
-    }, animations.length*ANIMATION_SPEED + i*ANIMATION_SPEED)
-  };
-};
+    }, animations.length * ANIMATION_SPEED + i * ANIMATION_SPEED);
+  }
 
-export const getTimeoutId1 = () => timeoutID
-export const getTImeoutId2 = () => timeoutID2
+  setTimeoutID2(temp);
 
-const mergeSort = (arr: Array<number>) => {
+  return <div></div>;
+}
+
+const mergeSort = (arr: Array<number>): number[][] => {
   const animations: number[][] = [];
-  if (arr.length <= 1) return arr;
+  if (arr.length <= 1) return animations;
 
   const duplicateArr = arr.slice();
   mergeSortHelper(arr, 0, arr.length - 1, duplicateArr, animations);

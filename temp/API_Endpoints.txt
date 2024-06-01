@@ -1,0 +1,36 @@
+AUTH
+
+POST /api/login
+POST /api/register
+POST /api/forgot-password
+POST /api/reset-password
+GET /api/auth/[...nextauth]
+
+PRODUCTS
+
+GET /api/products (Get list of all products)
+POST /api/products (Add a new product - admin only)
+DELETE /api/products/[type] (Delete all products of this type - admin only)
+DELETE /api/products/[id] (Delete a particular product - admin only)
+GET /api/products/[id] (Get specific product details)
+PUT /api/products/[id] (Update a specific product - admin only)
+
+REPORTS
+GET /api/reports (Get a list of all reports currently logged user has access to or everything if admin)
+
+SERVICE STAGES
+GET /api/service-stages (Get stage of all services currently logged user has access to or everything if admin)
+GET /api/service-stages/[job_id] (Get a specific stage of a service if authorized)
+PUT /api/service-stages/[job_id] (Update a specific stage of a job if authorized)
+
+SERVICES
+GET  /api/services (Get a list of all service requests)
+POST /api/services (Add a new service request)
+GET  /api/services/status/[job_id] (Get all past status histories of job_id
+
+GET /api/services/[job_id] (Get a particular job_id)
+PUT /api/services/[job_id] (Update a service request)
+DELETE /api/services/[job_id] (Delete a service request)
+
+GET /api/services/[job_id]/status (Get current status of job_id)
+PUT /api/services/[job_id]/status (update status of current job_id)

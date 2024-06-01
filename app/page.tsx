@@ -1,18 +1,15 @@
-"use client";
-
-import SortingVisualiser from "./_components/sortingVisualiser";
-import { useState } from "react";
+import AnimatedTitle from "./_components/animatedTitle";
+import Footer from "./_components/footer";
 import NavBar from "./_components/navbar";
+import SortDescription from "./_components/sortDescription";
 
 export default function Home() {
-  const [arr, setArr] = useState(new Array(0));
-  const [numOfBars, setNumOfBars] = useState(5);
-
   return (
-    
     <>
-      <NavBar arr={arr} setNumOfBars={setNumOfBars} numOfBars={numOfBars} />
-      <SortingVisualiser arr={arr} setArr={setArr} numOfBars={numOfBars} setNumOfBars={setNumOfBars}/>
+      <NavBar />
+      <AnimatedTitle />
+      <SortDescription />
+      <Footer />
     </>
   );
 }

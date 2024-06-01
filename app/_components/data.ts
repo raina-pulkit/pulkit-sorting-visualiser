@@ -1,20 +1,19 @@
-import { mergeSorter } from "../sortingAlgos/mergeSort";
 
 export const sorts = [
   {
     "name": "Merge Sort",
-    "function": mergeSorter,
+    "function": "MergeSorter",
   },
   {
     "name": "Quick Sort",
-    "function": mergeSorter,
+    "function": "MergeSorter",
   },
   {
     "name": "Bubble Sort",
-    "function": mergeSorter,
+    "function": "MergeSorter",
   },
   {
     "name": "Insertion Sort",
-    "function": mergeSorter,
+    "function": "MergeSorter",
   },
 ];
