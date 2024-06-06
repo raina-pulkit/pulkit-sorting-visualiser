@@ -1,113 +1,85 @@
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
-import React, { useCallback, useEffect, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-
-const FormSchema = z.object({
-  name: z.string().min(1, {
-    message: "There must be some value!",
-  }),
-});
+import React, { useEffect } from "react";
+import { useGlobalContext } from "../utils/globalProvider";
+import FileUpload from "./fileUpload";
+import { heightCalc, randGenerator } from "../utils/helperFuncs";
 
 const SortingVisualiser = () => {
-  const [arr, setArr] = useState(new Array(0));
+  const { arr, setArr, num, setNum } = useGlobalContext();
 
-  const randGenerator = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
-
-  const resetArray = (num: number) => {
+  const resetArray = () => {
     var arrNew = new Array(num);
+    const bars = Array.from(
+      document.getElementsByClassName("bars")
+    ) as Array<HTMLDivElement>;
+    bars.forEach((bar) => {
+      bar.style.backgroundColor = "slate";
+    });
     for (var i = 0; i < num; i++) arrNew[i] = randGenerator(10, 100);
-    setArr(arrNew);
+    setArr(() => arrNew);
   };
+
+  const resetArrayTo = () => {
+    const bars = Array.from(
+      document.getElementsByClassName("bars")
+    ) as Array<HTMLDivElement>;
+    bars.forEach((bar) => {
+      bar.style.backgroundColor = "slate";
+    });
+    setNum(() => arr.length);
+  };
+  let innerWidth = window.innerWidth;
 
   useEffect(() => {
-    resetArray(5);
-  }, []);
+    resetArray();
+  }, [num, setArr]);
 
-  const heightCalc = (num: number, min: number, max: number) =>
-    10 + ((num - min) * ((3 * window.innerHeight) / 4 - 10)) / (max - min);
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      name: "",
-    },
-  });
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    const num = parseInt(data.name, 10);
-    console.log(num);
-    if (Number.isNaN(num)) return;
-
-    resetArray(num);
-  }
+  useEffect(() => {
+    resetArrayTo();
+  }, [arr, setNum]);
 
   return (
-    <div className="flex flex-col flex-1 gap-3 h-full justify-end">
+    <div className="flex flex-col gap-6 justify-end items-center p-2 overflow-x-hidden px-5">
       <div className="flex justify-evenly items-end">
         {arr.map((_, ind) => {
           const n = arr.length;
           const gap = n > 100 ? 0 : 5;
-          const currWidth = Math.max(
-            2,
-            Math.min(window.innerWidth / arr.length, 200)
-          );
-          console.log("currWidth: ", currWidth);
+          const currWidth = Math.max(2, Math.min(innerWidth / arr.length, 200));
+
+          let arrMin = 1e9,
+            arrMax = 0;
+          arr.forEach((el) => {
+            arrMin = Math.min(arrMin, el);
+            arrMax = Math.max(arrMax, el);
+          });
 
           return (
             <div
               key={ind}
-              className={`bg-black`}
+              className={`bars select-none text-center rounded-md border-[#6360aa] border-${
+                num > 40 ? (num > 60 ? 0 : 1) : 4
+              } flex justify-center items-end text-black bg-white font-extrabold`}
               style={{
-                height: `${heightCalc(_, 10, 100)}px`,
+                height: `${heightCalc(
+                  _,
+                  arrMin,
+                  arrMax,
+                  10,
+                  (3 * window.innerHeight) / 4
+                )}px`,
                 width: `${currWidth}px`,
               }}
-            ></div>
+            >
+              {num < 60 && <h1 className="heightText">{_}</h1>}
+            </div>
           );
         })}
       </div>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6 flex justify-center items-center gap-5"
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input
-                    placeholder="Enter number of array items!"
-                    {...field}
-                    className="border-2 border-black outline-none shadow-md"
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-          <Button type="submit" className="!m-0 w-1/6 min-w-min">
-            Generate New Array
-          </Button>
-        </form>
-      </Form>
+      <div className="w-96">
+        <FileUpload />
+      </div>
     </div>
   );
 };
