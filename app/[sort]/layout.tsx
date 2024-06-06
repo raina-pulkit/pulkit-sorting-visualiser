@@ -4,11 +4,11 @@ import NavBar from "../_components/navbar";
 
 const RootLayout = ({children}: {children: React.ReactNode}) => {
   return (
-    <>
+    <div>
       <NavBar />
       <SortingVisualiser />
       {children}
-    </>
+    </div>
   );
 };
 

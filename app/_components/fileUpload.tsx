@@ -2,16 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGlobalContext } from "../utils/globalProvider";
+import { stopAnimations } from "../utils/helperFuncs";
 
-const arrFormer = (text: string) => {
-	console.log("text: ", text);
-	
+const arrFormer = (text: string): number[] => {
   const temp = text.split(" ");
+  if (temp.length > 1e4) throw new Error("Size of input too large!");
+
   const arr = temp.map((item) => {
-	if(!isNaN(Number(item))) return parseInt(item, 10);
-	else throw new Error("Not a valid array!")
+    if (!isNaN(Number(item))) return parseInt(item, 10);
+    else throw new Error("Not a valid array!");
   });
 
   return arr;
@@ -20,7 +21,20 @@ const arrFormer = (text: string) => {
 const FileUpload = () => {
   const [file, setFile] = useState<File>();
   const { toast } = useToast();
-  const { setArr, arr, setNum } = useGlobalContext();
+  const {
+    setArr,
+    arr,
+    setNum,
+    setChangeByArr,
+    timeoutID1,
+    timeoutID2,
+    setTimeoutID1,
+    setTimeoutID2,
+  } = useGlobalContext();
+
+  useEffect(() => {
+    // console.log("Array changed to: ", arr);
+  }, [arr]);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,14 +54,25 @@ const FileUpload = () => {
         toast({ title: "Success" });
 
         try {
+          console.log("txt: ", txt);
+
           const newArr = arrFormer(txt);
+          stopAnimations(timeoutID1, timeoutID2, setTimeoutID1, setTimeoutID2);
+          // console.log("setting to: ", newArr);
+
+          setNum(() => newArr.length);
           setArr(() => newArr);
-		  setNum(() => newArr.length);
-		  console.log(arr);
-		  
+
+          // console.log("setting to: ", newArr.length);
+
+          setChangeByArr((prev) => !prev);
         } catch (e: any) {
-			toast({ title: "Error", description: e.message, variant: "destructive" });
-		}
+          toast({
+            title: "Error",
+            description: e.message + "LMAO",
+            variant: "destructive",
+          });
+        }
       } else throw new Error(resData.msg);
     } catch (e: any) {
       toast({
@@ -60,11 +85,15 @@ const FileUpload = () => {
 
   return (
     <form onSubmit={onSubmit} className="flex gap-3 flex-1">
-      <Input
-        id="array"
-        type="file"
-        onChange={(e) => setFile(e.target.files?.[0])}
-      />
+      <label className="relative w-50 h-12 rounded-full bg-black shadow-custom-shadow flex items-center justify-center text-white font-bold cursor-pointer transform transition-transform duration-200 ease-out">
+        Choose File
+        <Input
+          id="array"
+          type="file"
+          onChange={(e) => setFile(e.target.files?.[0])}
+          className="bg-black text-white"
+        />
+      </label>
       <Button type="submit">Upload</Button>
     </form>
   );

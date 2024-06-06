@@ -11,13 +11,15 @@ const ChangeBars = ({
   timeoutID1,
   timeoutID2,
   setTimeoutID1,
-  setTimeoutID2
+  setTimeoutID2,
+  setChangeByNum
 }: {
   setNum: Dispatch<SetStateAction<number>>;
   timeoutID1: Array<NodeJS.Timeout> | null;
   timeoutID2: Array<NodeJS.Timeout> | null;
   setTimeoutID1: Dispatch<SetStateAction<Array<NodeJS.Timeout> | null>>;
   setTimeoutID2: Dispatch<SetStateAction<Array<NodeJS.Timeout> | null>>;
+  setChangeByNum: Dispatch<SetStateAction<boolean>>
 }) => {
   const FormSchema = z.object({
     name: z.string().min(1, {
@@ -53,8 +55,9 @@ const ChangeBars = ({
     // Reset the entire array
     const num = parseInt(data.name, 10);
     if (Number.isNaN(num)) return;
-    setNum(() => 0);
-    setTimeout(() => setNum(() => num), 1);
+
+    setNum(() => num);
+    setChangeByNum((prev) => !prev);
   }
   return (
     <Form {...form}>

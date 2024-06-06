@@ -10,6 +10,10 @@ import {
 type ContextProps = {
   show: boolean;
   setShow: Dispatch<SetStateAction<boolean>>;
+  changeByArr: boolean;
+  setChangeByArr: Dispatch<SetStateAction<boolean>>;
+  changeByNum: boolean;
+  setChangeByNum: Dispatch<SetStateAction<boolean>>;
   num: number;
   setNum: Dispatch<SetStateAction<number>>;
   arr: number[];
@@ -25,6 +29,10 @@ type ContextProps = {
 const defaultVals = {
   show: false,
   setShow: () => {},
+  changeByArr: false,
+  setChangeByArr: () => {},
+  changeByNum: false,
+  setChangeByNum: () => {},
   num: 0,
   setNum: () => {},
   arr: [],
@@ -45,15 +53,19 @@ export const ContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [show, setShow] = useState<boolean>(false);
-  const [arr, setArr] = useState<number[]>([]);
+  const [arr, setArr] = useState<number[]>([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+  ]);
   const [elements, setElements] = useState<HTMLDivElement[]>([]);
-  const [num, setNum] = useState(10);
+  const [num, setNum] = useState(20);
   const [timeoutID1, setTimeoutID1] = useState<Array<NodeJS.Timeout> | null>(
-    []
+    null
   );
   const [timeoutID2, setTimeoutID2] = useState<Array<NodeJS.Timeout> | null>(
-    []
+    null
   );
+  const [changeByArr, setChangeByArr] = useState(false);
+  const [changeByNum, setChangeByNum] = useState(false);
 
   return (
     <Context.Provider
@@ -70,6 +82,10 @@ export const ContextProvider = ({
         timeoutID2,
         setTimeoutID1,
         setTimeoutID2,
+        changeByArr,
+        setChangeByArr,
+        changeByNum,
+        setChangeByNum,
       }}
     >
       {children}

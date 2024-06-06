@@ -1,27 +1,14 @@
 "use client";
 
 import React, { useEffect } from "react";
-import ChangeBars from "./changeNumberOfBars";
 import { useGlobalContext } from "../utils/globalProvider";
 import FileUpload from "./fileUpload";
+import { heightCalc, randGenerator } from "../utils/helperFuncs";
 
 const SortingVisualiser = () => {
-  const {
-    arr,
-    setArr,
-    num,
-    setNum,
-    timeoutID1,
-    timeoutID2,
-    setTimeoutID1,
-    setTimeoutID2,
-  } = useGlobalContext();
+  const { arr, setArr, num, setNum } = useGlobalContext();
 
-  const randGenerator = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  };
-
-  const resetArray = (num: number) => {
+  const resetArray = () => {
     var arrNew = new Array(num);
     const bars = Array.from(
       document.getElementsByClassName("bars")
@@ -30,61 +17,67 @@ const SortingVisualiser = () => {
       bar.style.backgroundColor = "slate";
     });
     for (var i = 0; i < num; i++) arrNew[i] = randGenerator(10, 100);
-    setArr(arrNew);
+    setArr(() => arrNew);
   };
 
-  const resetArrayTo = (given: number[]) => {
-    var arrNew = new Array(num);
+  const resetArrayTo = () => {
     const bars = Array.from(
       document.getElementsByClassName("bars")
     ) as Array<HTMLDivElement>;
     bars.forEach((bar) => {
       bar.style.backgroundColor = "slate";
     });
-    for (var i = 0; i < num; i++) arrNew[i] = given[i];
-    setArr(arrNew);
-  }
+    setNum(() => arr.length);
+  };
+  let innerWidth = window.innerWidth;
 
   useEffect(() => {
-    resetArray(num);
-  }, [num]);
+    resetArray();
+  }, [num, setArr]);
 
-  const heightCalc = (num: number, min: number, max: number) =>
-    10 + ((num - min) * ((3 * window.innerHeight) / 4 - 10)) / (max - min);
+  useEffect(() => {
+    resetArrayTo();
+  }, [arr, setNum]);
 
   return (
-    <div className="flex flex-col gap-10 justify-end p-2">
+    <div className="flex flex-col gap-6 justify-end items-center p-2 overflow-x-hidden px-5">
       <div className="flex justify-evenly items-end">
         {arr.map((_, ind) => {
           const n = arr.length;
           const gap = n > 100 ? 0 : 5;
-          const currWidth = Math.max(
-            2,
-            Math.min(window.innerWidth / arr.length, 200)
-          );
+          const currWidth = Math.max(2, Math.min(innerWidth / arr.length, 200));
+
+          let arrMin = 1e9,
+            arrMax = 0;
+          arr.forEach((el) => {
+            arrMin = Math.min(arrMin, el);
+            arrMax = Math.max(arrMax, el);
+          });
 
           return (
             <div
               key={ind}
-              className={`bg-slate-600 bars`}
+              className={`bars select-none text-center rounded-md border-[#6360aa] border-${
+                num > 40 ? (num > 60 ? 0 : 1) : 4
+              } flex justify-center items-end text-black bg-white font-extrabold`}
               style={{
-                height: `${heightCalc(_, 10, 100)}px`,
+                height: `${heightCalc(
+                  _,
+                  arrMin,
+                  arrMax,
+                  10,
+                  (3 * window.innerHeight) / 4
+                )}px`,
                 width: `${currWidth}px`,
               }}
-            ></div>
+            >
+              {num < 60 && <h1 className="heightText">{_}</h1>}
+            </div>
           );
         })}
       </div>
 
-      <div className="flex justify-center gap-10 items-center">
-        <ChangeBars
-          setNum={setNum}
-          timeoutID1={timeoutID1}
-          timeoutID2={timeoutID2}
-          setTimeoutID1={setTimeoutID1}
-          setTimeoutID2={setTimeoutID2}
-        />
-        <h1 className="font-extrabold text-white text-3xl">OR</h1>
+      <div className="w-96">
         <FileUpload />
       </div>
     </div>

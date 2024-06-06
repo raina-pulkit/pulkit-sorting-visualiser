@@ -24,6 +24,7 @@ const Heading = ({
         className={`w-full flex justify-start gap-3 items-center text-4xl font-extrabold px-1.5 py-0 ${styles}`}
         variant={"ghost"}
         onClick={() => router.push("/")}
+        disabled={text==="Sorts"}
       >
         {icon ? <IoHome size={30}/> : <SortAsc size={30}/>}
         {text}
@@ -34,7 +35,7 @@ const Heading = ({
 
 const SideHeading = ({ text }: { text: string }): ReactNode => {
   return (
-	<h1 className="text-amber-200 text-center text-3xl mt-8">{text}</h1>
+	<h1 className="text-amber-200 text-center text-3xl mt-8 mb-3">{text}</h1>
   );
 };
 
@@ -67,7 +68,7 @@ const SideNavContent = () => {
       </div>
       <div className="flex flex-col">
         <SideHeading text="QUADRATIC" />
-        <Sorts text="Heap Sort" endpoint="bubble-sort" />
+        <Sorts text="Bubble Sort" endpoint="bubble-sort" />
         <Sorts text="Selection Sort" endpoint="selection-sort" />
         <Sorts text="Insertion Sort" endpoint="insertion-sort" />
       </div>

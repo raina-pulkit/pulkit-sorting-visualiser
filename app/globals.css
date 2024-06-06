@@ -80,3 +80,8 @@
     background-image: url('../public/mainbg.jpg');
     background-attachment: fixed;
   }
+
+  .bars {
+    background-color: bisque;
+    /* background-image: linear-gradient(to top, #252525, #d9d9d9); */
+  }
