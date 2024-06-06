@@ -2,11 +2,11 @@ import { Dispatch, SetStateAction } from "react";
 import { stopAnimations, animateThisMerge } from "../utils/helperFuncs";
 
 export const mergeSort = (
-  arr: number[],
   timeoutID1: NodeJS.Timeout[] | null,
   timeoutID2: NodeJS.Timeout[] | null,
   setTimeoutID1: Dispatch<SetStateAction<NodeJS.Timeout[] | null>>,
   setTimeoutID2: Dispatch<SetStateAction<NodeJS.Timeout[] | null>>,
+  arr: number[],
   num: number
 ) => {
   stopAnimations(timeoutID1, timeoutID2, setTimeoutID1, setTimeoutID2);

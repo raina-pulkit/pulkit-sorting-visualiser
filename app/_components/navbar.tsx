@@ -15,6 +15,7 @@ import { mergeSort } from "../sortingAlgos/mergeSort";
 import { randGenerator, stopAnimations } from "../utils/helperFuncs";
 import { bubbleSort } from "../sortingAlgos/bubbleSort";
 import { insertionSort } from "../sortingAlgos/insertionSort";
+import { selectionSort } from "../sortingAlgos/selectionSort";
 
 const NavBar = () => {
   const {
@@ -61,6 +62,13 @@ const NavBar = () => {
     setArr(() => arrNew);
   };
 
+  const helperFuncs = {
+    "/merge-sort": mergeSort,
+    "/bubble-sort": bubbleSort,
+    "/insertion-sort": insertionSort,
+    "/selection-sort": selectionSort
+  };
+
   return (
     <>
       <SideNav />
@@ -98,13 +106,13 @@ const NavBar = () => {
             </div>
           </div>
           {path !== "/" && (
-            <div className="w-full mx-4 flex flex-col">
+            <div className="w-1/2 mx-4 flex flex-col">
               <h2 className="text-white text-center">Elements: {num}</h2>
               <input
                 type="range"
                 value={num}
                 min={10}
-                max={1000}
+                max={100}
                 step={5}
                 onChange={(e) => {
                   stopAnimations(
@@ -142,18 +150,18 @@ const NavBar = () => {
                     );
                   else {
                     if (path === "/merge-sort")
-                      mergeSort(
-                        arr,
+                      helperFuncs[path](
                         timeoutID1,
                         timeoutID2,
                         setTimeoutID1,
                         setTimeoutID2,
+                        arr,
                         num
                       );
                     else if (path === "/quick-sort") console.log("HI");
                     else if (path === "/heap-sort") console.log("HI");
                     else if (path === "/bubble-sort")
-                      bubbleSort(
+                      helperFuncs[path](
                         timeoutID1,
                         timeoutID2,
                         setTimeoutID1,
@@ -162,15 +170,22 @@ const NavBar = () => {
                         num
                       );
                     else if (path === "/insertion-sort")
-                      insertionSort(
-                        arr,
+                      helperFuncs[path](
                         timeoutID1,
                         timeoutID2,
                         setTimeoutID1,
                         setTimeoutID2,
+                        arr,
                         num
                       );
-                    else if (path === "/selection-sort") console.log("HI");
+                    else if (path === "/selection-sort") helperFuncs[path](
+                      timeoutID1,
+                      timeoutID2,
+                      setTimeoutID1,
+                      setTimeoutID2,
+                      arr,
+                      num
+                    );
                     else if (path === "/radix-sort") console.log("HI");
                     else if (path === "/quick-sort") console.log("HI");
                   }
