@@ -16,7 +16,7 @@ export const insertionSort = (
   animateThisInsertion(setTimeoutID1, setTimeoutID2, animations);
 };
 
-const insertionSort2 = (arr: number[]) => {
+const insertionSort2 = (arr: number[]): number[][] => {
 	const n = arr.length;
 	const animations: number[][] = new Array<Array<number>>;
 

@@ -13,12 +13,10 @@ export const selectionSort = (
 
   const animations: number[][] = selectionSort2([...arr]);
 
-  console.log("Animation is: ", animations);
-
   animateThisSelection(setTimeoutID1, setTimeoutID2, num, animations);
 };
 
-const selectionSort2 = (arr: number[]) => {
+const selectionSort2 = (arr: number[]): number[][] => {
   const n = arr.length;
   const animations: number[][] = new Array<Array<number>>();
 

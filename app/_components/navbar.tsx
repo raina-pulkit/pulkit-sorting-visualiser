@@ -16,6 +16,7 @@ import { randGenerator, stopAnimations } from "../utils/helperFuncs";
 import { bubbleSort } from "../sortingAlgos/bubbleSort";
 import { insertionSort } from "../sortingAlgos/insertionSort";
 import { selectionSort } from "../sortingAlgos/selectionSort";
+import { quickSort } from "../sortingAlgos/quickSort";
 
 const NavBar = () => {
   const {
@@ -66,7 +67,8 @@ const NavBar = () => {
     "/merge-sort": mergeSort,
     "/bubble-sort": bubbleSort,
     "/insertion-sort": insertionSort,
-    "/selection-sort": selectionSort
+    "/selection-sort": selectionSort,
+    "/quick-sort": quickSort,
   };
 
   return (
@@ -158,7 +160,15 @@ const NavBar = () => {
                         arr,
                         num
                       );
-                    else if (path === "/quick-sort") console.log("HI");
+                    else if (path === "/quick-sort")
+                      helperFuncs[path](
+                        timeoutID1,
+                        timeoutID2,
+                        setTimeoutID1,
+                        setTimeoutID2,
+                        arr,
+                        num
+                      );
                     else if (path === "/heap-sort") console.log("HI");
                     else if (path === "/bubble-sort")
                       helperFuncs[path](
@@ -178,16 +188,17 @@ const NavBar = () => {
                         arr,
                         num
                       );
-                    else if (path === "/selection-sort") helperFuncs[path](
-                      timeoutID1,
-                      timeoutID2,
-                      setTimeoutID1,
-                      setTimeoutID2,
-                      arr,
-                      num
-                    );
+                    else if (path === "/selection-sort")
+                      helperFuncs[path](
+                        timeoutID1,
+                        timeoutID2,
+                        setTimeoutID1,
+                        setTimeoutID2,
+                        arr,
+                        num
+                      );
+                    else if (path === "/bitonic-sort") console.log("HI");
                     else if (path === "/radix-sort") console.log("HI");
-                    else if (path === "/quick-sort") console.log("HI");
                   }
                 }}
               >
