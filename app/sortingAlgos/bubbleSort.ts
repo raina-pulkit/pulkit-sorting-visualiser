@@ -16,7 +16,7 @@ export const bubbleSort = (
   animateThisBubble(setTimeoutID1, setTimeoutID2, num, animations)
 };
 
-const bubbleSort2 = (arr: number[]) => {
+const bubbleSort2 = (arr: number[]): number[][] => {
 	const n = arr.length;
 
 	const animations: number[][] = new Array<Array<number>>;
