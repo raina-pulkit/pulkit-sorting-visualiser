@@ -33,10 +33,12 @@ const SortingVisualiser = () => {
 
   useEffect(() => {
     resetArray();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [num, setArr]);
 
   useEffect(() => {
     resetArrayTo();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arr, setNum]);
 
   return (

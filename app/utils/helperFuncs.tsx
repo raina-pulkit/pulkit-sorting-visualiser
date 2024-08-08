@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 
 const SECONDARY_COLOR = "red",
   PRIMARY_COLOR = "bisque";
-const ANIMATION_SPEED = 50;
+const ANIMATION_SPEED = 600;
 
 export const stopAnimations = (
   timeoutID1: Array<NodeJS.Timeout> | null,
@@ -38,6 +38,14 @@ export const heightCalc = (
   maxOut: number
 ) => minOut + ((num - minIn) * (maxOut - minOut)) / (maxIn - minIn);
 
+export const heightCalcInv = (
+  num: number,
+  minIn: number,
+  maxIn: number,
+  minOut: number,
+  maxOut: number
+) => Math.round(minIn + ((num - minIn) *(maxIn - minIn))/(maxOut - minOut));
+
 export const animateThisMerge = (
   setTimeoutID1: Dispatch<SetStateAction<NodeJS.Timeout[] | null>>,
   setTimeoutID2: Dispatch<SetStateAction<NodeJS.Timeout[] | null>>,
@@ -65,7 +73,7 @@ export const animateThisMerge = (
     if (i % 3 !== 2) {
       const [barOne, barTwo] = animations[i];
 
-      const color = i % 3 === 0 ? SECONDARY_COLOR : PRIMARY_COLOR;
+      const color = (i % 3 === 0) ? SECONDARY_COLOR : PRIMARY_COLOR;
 
       tempArr[i] = setTimeout(() => {
         bars[barOne].style.backgroundColor = color;
@@ -74,13 +82,16 @@ export const animateThisMerge = (
     } else {
       tempArr[i] = setTimeout(() => {
         const [barOne, newHeight] = animations[i];
-        bars[barOne].style.height = `${heightCalc(
+        const rand = heightCalc(
           newHeight,
           minEl,
           maxEl,
           10,
           (3 * window.innerHeight) / 4
-        )}px`;
+        );
+        bars[barOne].style.height = `${rand}px`;
+
+        bars[barOne].textContent = `${heightCalcInv(rand, minEl, maxEl, 10, (3 * window.innerHeight) / 4)}`;
       }, i * ANIMATION_SPEED);
     }
   }
